@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crescentech AI Assistant Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0a1628;
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f0f4ff;
+      --text-secondary: #8899bb;
+      --orange: #ff6b42;
+      --green: #00c878;
+      --blue: #5599ff;
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--text-primary);
+      overflow-x: hidden;
+    }
+
+    /* Subtle grid overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Glowing orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb-blue {
+      width: 600px;
+      height: 600px;
+      top: -200px;
+      right: -180px;
+      background: radial-gradient(circle at center, rgba(85, 153, 255, 0.2) 0%, rgba(85, 153, 255, 0.06) 40%, transparent 70%);
+      filter: blur(60px);
+    }
+
+    .orb-green {
+      width: 520px;
+      height: 520px;
+      bottom: -160px;
+      left: -160px;
+      background: radial-gradient(circle at center, rgba(0, 200, 120, 0.16) 0%, rgba(0, 200, 120, 0.05) 40%, transparent 70%);
+      filter: blur(60px);
+    }
+
+    /* Page wrapper */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      width: 100%;
+      max-width: 860px;
+      padding: 88px 24px 52px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 6px 18px;
+      background: rgba(85, 153, 255, 0.08);
+      border: 1px solid rgba(85, 153, 255, 0.22);
+      border-radius: 999px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: #7ab4ff;
+      margin-bottom: 36px;
+      letter-spacing: 0.01em;
+    }
+
+    /* Animated pulse dot */
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #5599ff;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .pulse-dot::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: rgba(85, 153, 255, 0.45);
+      animation: pulse 2.2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.85); opacity: 0.9; }
+      50%       { transform: scale(1.8);  opacity: 0; }
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(38px, 7vw, 68px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      margin-bottom: 22px;
+      background: linear-gradient(130deg, #f0f4ff 25%, #7ab4ff 60%, #00c878 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(15px, 2.2vw, 17px);
+      font-weight: 400;
+      color: var(--text-secondary);
+      max-width: 540px;
+      margin: 0 auto 56px;
+      line-height: 1.7;
+    }
+
+    /* ── Card grid ── */
+    .cards-section {
+      width: 100%;
+      max-width: 1080px;
+      padding: 0 24px 56px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 22px;
+    }
+
+    /* Card base — <a> tags for keyboard accessibility */
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 30px 28px 26px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      text-decoration: none;
+      color: var(--text-primary);
+      overflow: hidden;
+      transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+      outline-offset: 4px;
+    }
+
+    /* Gradient overlay — fades in on hover */
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.28s ease;
+      pointer-events: none;
+      border-radius: 18px;
+    }
+
+    .card[data-accent="orange"]::before {
+      background: linear-gradient(140deg, rgba(255, 107, 66, 0.1) 0%, transparent 55%);
+    }
+    .card[data-accent="green"]::before {
+      background: linear-gradient(140deg, rgba(0, 200, 120, 0.1) 0%, transparent 55%);
+    }
+    .card[data-accent="blue"]::before {
+      background: linear-gradient(140deg, rgba(85, 153, 255, 0.1) 0%, transparent 55%);
+    }
+
+    /* Hover lift + border brighten + overlay */
+    .card:hover,
+    .card:focus-visible {
+      transform: translateY(-3px);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+    }
+    .card:hover::before,
+    .card:focus-visible::before { opacity: 1; }
+
+    .card[data-accent="orange"]:hover,
+    .card[data-accent="orange"]:focus-visible { border-color: rgba(255, 107, 66, 0.45); }
+    .card[data-accent="green"]:hover,
+    .card[data-accent="green"]:focus-visible  { border-color: rgba(0, 200, 120, 0.45); }
+    .card[data-accent="blue"]:hover,
+    .card[data-accent="blue"]:focus-visible   { border-color: rgba(85, 153, 255, 0.45); }
+
+    /* Icon box */
+    .card-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 22px;
+      flex-shrink: 0;
+    }
+
+    .icon-orange { background: rgba(255, 107, 66, 0.14); color: #ff6b42; }
+    .icon-green  { background: rgba(0, 200, 120, 0.14); color: #00c878; }
+    .icon-blue   { background: rgba(85, 153, 255, 0.14); color: #5599ff; }
+
+    .card-category {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .cat-orange { color: #ff6b42; }
+    .cat-green  { color: #00c878; }
+    .cat-blue   { color: #5599ff; }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      flex-grow: 1;
+      margin-bottom: 26px;
+    }
+
+    /* CTA row */
+    .card-cta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: auto;
+    }
+
+    .cta-orange { color: #ff6b42; }
+    .cta-green  { color: #00c878; }
+    .cta-blue   { color: #5599ff; }
+
+    .cta-arrow {
+      display: inline-flex;
+      transition: transform 0.26s ease;
+    }
+
+    .card:hover .cta-arrow,
+    .card:focus-visible .cta-arrow {
+      transform: translateX(5px);
+    }
+
+    /* ── Status row ── */
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 4px 24px 44px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00c878;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .status-dot::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: rgba(0, 200, 120, 0.4);
+      animation: pulse 2.2s ease-in-out infinite;
+    }
+
+    .status-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    /* ── Footer ── */
+    footer {
+      width: 100%;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 28px 24px;
+      margin-top: auto;
+    }
+
+    .footer-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    /* Gradient box with lightning bolt */
+    .footer-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, #5599ff 0%, #00c878 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .footer-company {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .footer-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .footer-tagline {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .footer-right {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .footer-right em {
+      font-style: normal;
+      color: #7ab4ff;
+      font-weight: 500;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .hero {
+        padding: 64px 20px 40px;
+      }
+      .cards-section {
+        padding: 0 16px 40px;
+      }
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Glowing orbs -->
+  <div class="orb orb-blue" aria-hidden="true"></div>
+  <div class="orb orb-green" aria-hidden="true"></div>
+
+  <div class="page">
+
+    <!-- Hero section -->
+    <section class="hero" aria-label="Portal introduction">
+      <div class="badge">
+        <span class="pulse-dot" aria-hidden="true"></span>
+        AI-Powered Assistants
+      </div>
+      <h1 class="hero-title">Your Smart<br>Workforce Portal</h1>
+      <p class="hero-sub">
+        Instant access to intelligent assistants designed to streamline HR,
+        compliance, and employee benefits — all in one place.
+      </p>
+    </section>
+
+    <!-- Card grid -->
+    <section class="cards-section" aria-label="Available assistants">
+      <div class="cards-grid">
+
+        <!-- PERKESO -->
+        <a class="card"
+           href="https://perkeso-chatbot-glx8.vercel.app/"
+           target="_blank"
+           rel="noopener noreferrer"
+           data-accent="orange"
+           aria-label="Open PERKESO Assistant in a new tab">
+          <div class="card-icon icon-orange" aria-hidden="true">
+            <svg width="23" height="23" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <div class="card-category cat-orange">Social Security</div>
+          <div class="card-title">PERKESO Assistant</div>
+          <p class="card-desc">
+            Get instant answers on SOCSO/EIS contributions, employee
+            coverage, claims processing, and statutory compliance requirements.
+          </p>
+          <div class="card-cta cta-orange">
+            Launch Assistant
+            <span class="cta-arrow" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2.2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+
+        <!-- KWSP -->
+        <a class="card"
+           href="https://kwsp-chatbot-5kto.vercel.app"
+           target="_blank"
+           rel="noopener noreferrer"
+           data-accent="green"
+           aria-label="Open KWSP Assistant in a new tab">
+          <div class="card-icon icon-green" aria-hidden="true">
+            <svg width="23" height="23" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <div class="card-category cat-green">Retirement Fund</div>
+          <div class="card-title">KWSP Assistant</div>
+          <p class="card-desc">
+            Navigate EPF contribution rates, withdrawal schemes, account
+            management, and employer obligations — all with a single question.
+          </p>
+          <div class="card-cta cta-green">
+            Launch Assistant
+            <span class="cta-arrow" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2.2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+
+        <!-- HR Pro -->
+        <a class="card"
+           href="https://hr-pro-htf7.vercel.app/chat"
+           target="_blank"
+           rel="noopener noreferrer"
+           data-accent="blue"
+           aria-label="Open HR Pro Assistant in a new tab">
+          <div class="card-icon icon-blue" aria-hidden="true">
+            <svg width="23" height="23" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+          </div>
+          <div class="card-category cat-blue">Human Resources</div>
+          <div class="card-title">HR Pro Assistant</div>
+          <p class="card-desc">
+            Your expert HR companion for employment law, payroll queries,
+            leave policies, and workforce management guidance — available 24/7.
+          </p>
+          <div class="card-cta cta-blue">
+            Launch Assistant
+            <span class="cta-arrow" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2.2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Status row -->
+    <div class="status-row" role="status" aria-live="polite">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span class="status-text">All systems operational</span>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <!-- Lightning bolt SVG in gradient box -->
+          <div class="footer-logo" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+          <div class="footer-company">
+            <div class="footer-name">Crescentech</div>
+            <div class="footer-tagline">IT Solutions &amp; Services</div>
+          </div>
+        </div>
+        <div class="footer-right">
+          Powered by <em>Artificial Intelligence</em>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>
