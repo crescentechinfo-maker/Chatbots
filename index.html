@@ -376,16 +376,23 @@
       gap: 13px;
     }
 
-    /* Gradient box with lightning bolt */
     .footer-logo {
-      width: 42px;
-      height: 42px;
+      width: 52px;
+      height: 52px;
       border-radius: 11px;
-      background: linear-gradient(135deg, #5599ff 0%, #00c878 100%);
+      background: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      overflow: hidden;
+      padding: 3px;
+    }
+
+    .footer-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .footer-company {
@@ -532,7 +539,7 @@
 
         <!-- HR Pro -->
         <a class="card"
-           href="https://ai-hr-chatbot-mu.vercel.app/chat"
+           href="https://ai-hr-chatbot-mu.vercel.app/"
            target="_blank"
            rel="noopener noreferrer"
            data-accent="blue"
@@ -586,11 +593,8 @@
     <footer>
       <div class="footer-inner">
         <div class="footer-brand">
-          <!-- Lightning bolt SVG in gradient box -->
-          <div class="footer-logo" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-            </svg>
+          <div class="footer-logo">
+            <img src="download.png" alt="Crescentech logo" />
           </div>
           <div class="footer-company">
             <div class="footer-name">Crescentech</div>
