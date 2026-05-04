@@ -159,6 +159,15 @@
       padding: 0 24px 56px;
     }
 
+    .cards-intro {
+      font-size: 14.5px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: 28px;
+      line-height: 1.7;
+    }
+
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -320,6 +329,29 @@
       color: var(--text-secondary);
     }
 
+    /* ── Disclaimer ── */
+    .disclaimer {
+      width: 100%;
+      max-width: 860px;
+      padding: 0 24px 36px;
+      text-align: center;
+    }
+
+    .disclaimer-text {
+      font-size: 12.5px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 10px;
+      padding: 14px 20px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .disclaimer-text span {
+      display: block;
+    }
+
     /* ── Footer ── */
     footer {
       width: 100%;
@@ -425,11 +457,12 @@
 
     <!-- Card grid -->
     <section class="cards-section" aria-label="Available assistants">
+      <p class="cards-intro">A portal with AI assistants to help manage HR, compliance, and employee benefits for PERKESO (SOCSO) and KWSP (EPF).</p>
       <div class="cards-grid">
 
         <!-- PERKESO -->
         <a class="card"
-           href="https://perkeso-chatbot-glx8.vercel.app/"
+           href="https://perkeso-ai-chatbot.vercel.app/chat"
            target="_blank"
            rel="noopener noreferrer"
            data-accent="orange"
@@ -465,7 +498,7 @@
 
         <!-- KWSP -->
         <a class="card"
-           href="https://kwsp-chatbot-5kto.vercel.app"
+           href="https://kwsp-pro.vercel.app/"
            target="_blank"
            rel="noopener noreferrer"
            data-accent="green"
@@ -499,7 +532,7 @@
 
         <!-- HR Pro -->
         <a class="card"
-           href="https://hr-pro-htf7.vercel.app/chat"
+           href="https://ai-hr-chatbot-mu.vercel.app/chat"
            target="_blank"
            rel="noopener noreferrer"
            data-accent="blue"
@@ -539,6 +572,14 @@
     <div class="status-row" role="status" aria-live="polite">
       <span class="status-dot" aria-hidden="true"></span>
       <span class="status-text">All systems operational</span>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="disclaimer" role="note">
+      <p class="disclaimer-text">
+        <span>This chatbot is for reference only. It is not legal advice and cannot be used in court.</span>
+        <span>Chatbot ini untuk rujukan sahaja. Bukan nasihat undang-undang dan tidak boleh digunakan di mahkamah.</span>
+      </p>
     </div>
 
     <!-- Footer -->
